@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import CreateForm from "../../components/createForm";
 import PostCard from "../../components/PostCard";
 
 // Mock Data - need to update accordingly
@@ -26,6 +26,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [postCreated, setPostCreated] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -47,7 +48,11 @@ export default function Home() {
       }
     };
     fetchPosts();
-  }, []);
+  }, [postCreated]);
+
+  function handlePostCreated() {
+    setPostCreated(prev => !prev);
+  };
 
   if (loading) {
     return <div className="container mx-auto px-4">Loading...</div>;
@@ -65,12 +70,11 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-end my-4">
-        <Link
-          to="/create-post"
+          <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Create Post
-        </Link>
+          onClick={() => document.getElementById('my_modal_5').showModal()}
+        >Create Post
+        </button>
       </div>
 
       {posts.map((post, idx) => {
@@ -80,6 +84,7 @@ export default function Home() {
           </div>
         );
       })}
+      <CreateForm handlePostCreated={handlePostCreated} />
     </div>
   );
 }
