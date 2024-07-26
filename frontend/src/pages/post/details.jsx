@@ -1,11 +1,17 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, Navigate, useParams, useNavigate } from "react-router-dom";
+import UpdateForm from "../../components/updateForm";
 
 const PostDetails = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [postUpdated, setPostUpdated] = useState(false);
+  const [toaster, setToaster] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -33,7 +39,26 @@ const PostDetails = () => {
     };
 
     fetchPost();
-  }, [postId]);
+  }, [postUpdated]);
+
+  function handleDelete() {
+    try {
+      axios.delete(`http://localhost:3000/posts/${postId}`)
+      .then((res) => {
+        console.log(res.data)
+        navigate('/');
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  };
+
+  function handlePostCreated() {
+    setPostUpdated(prev => !prev);
+    setToaster(prev => !prev);
+    setTimeout(() => setToaster(false), 2000);
+  };
+
 
   if (loading) {
     return (
@@ -95,6 +120,22 @@ const PostDetails = () => {
           <div className="text-gray-700 leading-relaxed">{post.content}</div>
         </div>
       </div>
+
+      {toaster ?
+     <div className="toast toast-top toast-end">
+         <div className="alert alert-success">
+      <span>Post updated successfully.</span>
+      </div> 
+     </div> : null }
+
+      <div className="flex justify-center align-middle gap-3 p-4">
+        <Link to='/'><button className="btn">Home</button></Link>
+        <button className="btn" onClick={() => document.getElementById('my_modal_5').showModal()}>Update</button>
+        <button className="btn btn-error" onClick={handleDelete}>Delete</button>
+        </div>
+     
+      <UpdateForm post={post} postId={postId} handlePostCreated={handlePostCreated}/>
+
       <footer className="bg-gray-800 text-white text-center py-3 mt-auto">
         <p>&copy; {new Date().getFullYear()} MyBlog. All rights reserved.</p>
       </footer>
