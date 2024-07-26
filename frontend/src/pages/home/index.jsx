@@ -27,6 +27,7 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [postCreated, setPostCreated] = useState(false);
+  const [toaster, setToaster] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -52,6 +53,8 @@ export default function Home() {
 
   function handlePostCreated() {
     setPostCreated(prev => !prev);
+    setToaster(prev => !prev);
+    setTimeout(() => setToaster(false), 2000);
   };
 
   if (loading) {
@@ -76,6 +79,13 @@ export default function Home() {
         >Create Post
         </button>
       </div>
+
+      {toaster ?
+     <div className="toast toast-top toast-end">
+         <div className="alert alert-success">
+      <span>Post created successfully.</span>
+      </div> 
+     </div> : null }
 
       {posts.map((post, idx) => {
         return (
