@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PostCard from "../../components/PostCard";
 
@@ -7,23 +7,39 @@ const mockData = [
   {
     id: 1,
     title: "Post One",
-    image: "https://promova.com/content/large_types_of_birds_8b7339085c.png",
-    snippet: "This is snippet",
+    cover: "https://promova.com/content/large_types_of_birds_8b7339085c.png",
+    author: "This is snippet",
     content: "This is the full content",
+    date: "07/25/2024",
   },
   {
     id: 2,
     title: "Post Two",
-    image: "https://promova.com/content/large_types_of_birds_8b7339085c.png",
-    snippet: "This is snippet",
+    cover: "https://promova.com/content/large_types_of_birds_8b7339085c.png",
+    author: "This is snippet",
     content: "This is the full content",
+    date: "07/25/2024",
   },
 ];
 
 export default function Home() {
-  const [posts, setPosts] = useState(mockData);
+  const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/posts");
+        console.log(response);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   if (loading) {
     return <div className="container mx-auto px-4">Loading...</div>;
