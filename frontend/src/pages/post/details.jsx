@@ -7,8 +7,6 @@ const PostDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log("Post id = " + postId);
-
   useEffect(() => {
     const fetchPost = async () => {
       if (!postId) {
@@ -16,8 +14,6 @@ const PostDetails = () => {
         setLoading(false);
         return;
       }
-
-      console.log("Post id = " + postId);
 
       try {
         const response = await fetch(`http://localhost:3000/posts/${postId}`, {
@@ -40,32 +36,68 @@ const PostDetails = () => {
   }, [postId]);
 
   if (loading) {
-    return <div className="container mx-auto px-4">Loading...</div>;
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <div className="flex-grow flex items-center justify-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded mb-4 w-1/4 mx-auto"></div>
+            <div className="h-4 bg-gray-200 rounded mb-2 w-1/2 mx-auto"></div>
+            <div className="h-4 bg-gray-200 rounded mb-2 w-1/2 mx-auto"></div>
+            <div className="h-4 bg-gray-200 rounded mb-2 w-3/4 mx-auto"></div>
+          </div>
+          <p className="text-gray-500">Loading...</p>
+        </div>
+        <footer className="bg-gray-800 text-white text-center py-3">
+          <p>&copy; {new Date().getFullYear()} MyBlog. All rights reserved.</p>
+        </footer>
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 text-red-500">Error: {error}</div>
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-red-500 text-xl font-semibold">{`Error: ${error}`}</p>
+        </div>
+        <footer className="bg-gray-800 text-white text-center py-3">
+          <p>&copy; {new Date().getFullYear()} MyBlog. All rights reserved.</p>
+        </footer>
+      </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="container mx-auto px-4 text-gray-500">Post not found</div>
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-gray-500 text-xl">Post not found</p>
+        </div>
+        <footer className="bg-gray-800 text-white text-center py-3">
+          <p>&copy; {new Date().getFullYear()} MyBlog. All rights reserved.</p>
+        </footer>
+      </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-4 bg-white rounded-lg shadow-md">
-      <img
-        src={post.cover}
-        alt={post.title}
-        className="w-full h-64 object-cover rounded-md"
-      />
-      <h2 className="mt-2 text-3xl font-bold">{post.title}</h2>
-      <p className="mt-2 text-gray-600">{post.author}</p>
-      <p className="mt-2 text-gray-600">{post.date}</p>
-      <div className="mt-4 text-gray-700">{post.content}</div>
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <div className="flex-grow bg-white rounded-lg shadow-lg overflow-hidden">
+        <img
+          src={post.cover}
+          alt={post.title}
+          className="w-full h-64 object-cover"
+        />
+        <div className="p-6 text-center">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">{post.title}</h2>
+          <p className="text-gray-600 text-lg mb-2">by {post.author}</p>
+          <p className="text-gray-500 text-sm mb-4">{new Date(post.date).toLocaleDateString()}</p>
+          <div className="text-gray-700 leading-relaxed">{post.content}</div>
+        </div>
+      </div>
+      <footer className="bg-gray-800 text-white text-center py-3 mt-auto">
+        <p>&copy; {new Date().getFullYear()} MyBlog. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
