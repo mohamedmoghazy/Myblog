@@ -30,7 +30,15 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/posts");
+        const response = await fetch("http://localhost:3000/posts", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setPosts(data);
         console.log(response);
       } catch (err) {
         setError(err.message);
