@@ -7,6 +7,8 @@ const PostDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  console.log("Post id = " + postId);
+
   useEffect(() => {
     const fetchPost = async () => {
       if (!postId) {
